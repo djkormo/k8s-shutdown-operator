@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  namespace: shutdown-operator
+  name: shutdown-operator-rolebinding-namespaced
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: shutdown-operator-role-namespaced
+subjects:
+  - kind: ServiceAccount
+    name: shutdown-operator
