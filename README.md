@@ -83,6 +83,14 @@ Check RBAC
 kubectl auth can-i -n shutdown-operator create events --as=system:serviceaccount:shutdown-operator:shutdown-operator
 ```
 
+Add release version as git tag
+
+```
+git tag 0.1.0
+git push origin --tags
+
+```
+
 
 Based on 
 
@@ -93,5 +101,7 @@ https://github.com/kubernetes-client/python/blob/master/examples/deployment_crud
 https://github.com/kubernetes-client/python/issues/1378
 
 https://stackoverflow.com/questions/53929693/how-to-scale-kubernetes-daemonset-to-0
+
+https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions
 
 

@@ -77,15 +77,15 @@ jobs:
       working-directory: ./helm
       run: helm package --version ${{ steps.version.outputs.version }} .
 #      run: helm package --version 0.1.0 .
-#    - name: create release
-#      uses: actions/create-release@v1
-#      id: create_release
-#      with:
-#        draft: false
-#        prerelease: false
-#        release_name: 0.1.0 #${{ steps.version.outputs.version }}
-#        tag_name: ${{ github.ref }}
-#        body_path: CHANGELOG.md
+    - name: create release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: false
+        prerelease: false
+        release_name: ${{ steps.version.outputs.version }}
+        tag_name: ${{ github.ref }}
+        body_path: CHANGELOG.md
 #      env:
 #        GITHUB_TOKEN: ${{ github.token }}
 #    - name: upload helm artifact
