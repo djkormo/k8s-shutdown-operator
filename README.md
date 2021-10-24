@@ -6,8 +6,8 @@
 ### Build and push image 
 
 ```bash
-docker image build . -t djkormo/op-shutdown:latest 
-docker image push djkormo/op-shutdown:latest
+docker image build . -t djkormo/shutdown-operator:latest 
+docker image push djkormo/shutdown-operator:latest
 ```
 
 ### Deploy crd

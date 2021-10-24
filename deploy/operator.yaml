@@ -36,7 +36,7 @@ spec:
         - name: EXCLUDED_NAMESPACES
           value: "kube-system,kube-public,kube-node-lease"
         name: op
-        image: djkormo/op-shutdown
+        image: djkormo/shutdown-operator
         resources:
           requests:
             memory: "64Mi"

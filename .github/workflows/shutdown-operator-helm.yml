@@ -13,7 +13,7 @@ jobs:
       run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
       id: version
     - name: build package
-      working-directory: kopf-example-shutdown-operator/helm
+      working-directory: ./helm
 #      run: helm package --version ${{ steps.version.outputs.version }} shutdown-operator
       run: helm package --version 0.1.0 .
 #    - name: create release
