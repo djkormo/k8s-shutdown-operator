@@ -65,6 +65,7 @@ jobs:
         severity: 'CRITICAL,HIGH'
 
   buildHelmChart:
+    needs: buildDocker 
     runs-on: ubuntu-latest
     steps:
     - name: checkout
@@ -74,7 +75,7 @@ jobs:
       id: version
     - name: build package
       working-directory: ./helm
-      run: helm package --version ${{ steps.version.outputs.version }} shutdown-operator
+      run: helm package --version ${{ steps.version.outputs.version }} .
 #      run: helm package --version 0.1.0 .
 #    - name: create release
 #      uses: actions/create-release@v1
