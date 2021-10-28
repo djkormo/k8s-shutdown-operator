@@ -13,26 +13,26 @@ jobs:
         with:
           files: ./deploy
           
-  testKubernetesDeprecatedManifests:
-    needs: validateKubernetesManifests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check-out repo
-        uses: actions/checkout@v2
+#  testKubernetesDeprecatedManifests:
+#    needs: validateKubernetesManifests
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Check-out repo
+#        uses: actions/checkout@v2
 
-      - name: Install Helm and Kubepug binaries
-        run: |
-          mkdir -p ~/bin
-          curl -sSL https://github.com/rikatz/kubepug/releases/latest/download/kubepug_linux_amd64.tar.gz | tar xvfz - --overwrite -C ~/bin/
+#      - name: Install Helm and Kubepug binaries
+#        run: |
+#          mkdir -p ~/bin
+#          curl -sSL https://github.com/rikatz/kubepug/releases/latest/download/kubepug_linux_amd64.tar.gz | tar xvfz - --overwrite -C ~/bin/
 #          curl -sSL https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz | tar xvfz - -C ~/bin/ --wildcards --strip 1 '*/helm'
       
-      - name: Run Kubepug with your Helm Charts Repository
-        run: |
-          find charts -mindepth 1 -maxdepth 1 -type d | xargs -t -n1 -I% /bin/bash -c '~/bin/helm template % --api-versions v1.21.1 | ~/bin/kubepug --error-on-deprecated --error-on-deleted --k8s-version v1.21.1 --input-file /dev/stdin'
+#      - name: Run Kubepug with your Helm Charts Repository
+#        run: |
+#          find charts -mindepth 1 -maxdepth 1 -type d | xargs -t -n1 -I% /bin/bash -c '~/bin/helm template % --api-versions v1.21.1 | ~/bin/kubepug --error-on-deprecated --error-on-deleted --k8s-version v1.21.1 --input-file /dev/stdin'
           
 
   validateHelmCharts:
-    needs: testKubernetesDeprecatedManifests
+    needs: validateKubernetesManifests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
