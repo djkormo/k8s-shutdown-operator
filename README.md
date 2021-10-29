@@ -77,6 +77,26 @@ Redeploy operator
 kubectl replace -R -f deploy/ --force
 ```
 
+Test manifest
+
+```yaml
+apiVersion: djkormo.github/v1alpha1
+kind: Shutdown
+metadata:
+  name: shutdown-my-namespace
+  namespace: my-namespace 
+spec:
+  namespace: my-namespace
+  dry-run: false # dry run mode , default false
+  state: true # turning off mode, default true
+  deployments: true # turn off deployments, default false
+  daemonsets: true # turn off daemonsets , default false
+  statefulsets: true # turn off daemonsets statefulset default false 
+  filter: ""
+  node-selector: "shutdown-non-existing-test-abcef"  
+```
+
+
 Check RBAC
 
 ```
