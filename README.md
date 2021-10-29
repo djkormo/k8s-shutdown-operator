@@ -106,7 +106,7 @@ kubectl auth can-i -n shutdown-operator create events --as=system:serviceaccount
 Add release version as git tag
 
 ```
-git tag 0.1.0
+git tag v0.1.0
 git push origin --tags
 
 ```
