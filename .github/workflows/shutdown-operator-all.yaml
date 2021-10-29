@@ -87,8 +87,6 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v1
-    - name: version_echo
-      run: echo "version:" ${GITHUB_REF/refs\/tags\//}  
     - name: version
       run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
       id: version
@@ -117,6 +115,5 @@ jobs:
         asset_name: shutdown-operator-${{ steps.version.outputs.version }}.tgz
 #        asset_path: ./helm/shutdown-operator-0.1.0.tgz
 #       asset_name: shutdown-operator-0.1.0.tgz
-
         asset_content_type: application/gzip
 
