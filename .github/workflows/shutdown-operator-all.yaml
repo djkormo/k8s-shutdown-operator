@@ -2,6 +2,10 @@ name: shutdown operator pipeline
 
 on:
   push:
+    paths:
+      - '**.yaml'
+      - '**.py'
+
 
 jobs:
   validateKubernetesManifests:
@@ -13,24 +17,7 @@ jobs:
         with:
           files: ./deploy
           
-#  testKubernetesDeprecatedManifests:
-#    needs: validateKubernetesManifests
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Check-out repo
-#        uses: actions/checkout@v2
-
-#      - name: Install Helm and Kubepug binaries
-#        run: |
-#          mkdir -p ~/bin
-#          curl -sSL https://github.com/rikatz/kubepug/releases/latest/download/kubepug_linux_amd64.tar.gz | tar xvfz - --overwrite -C ~/bin/
-#          curl -sSL https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz | tar xvfz - -C ~/bin/ --wildcards --strip 1 '*/helm'
       
-#      - name: Run Kubepug with your Helm Charts Repository
-#        run: |
-#          find charts -mindepth 1 -maxdepth 1 -type d | xargs -t -n1 -I% /bin/bash -c '~/bin/helm template % --api-versions v1.21.1 | ~/bin/kubepug --error-on-deprecated --error-on-deleted --k8s-version v1.21.1 --input-file /dev/stdin'
-          
-
   validateHelmCharts:
     needs: validateKubernetesManifests
     runs-on: ubuntu-latest
@@ -81,39 +68,37 @@ jobs:
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
 
-  buildHelmChart:
-    needs: buildDocker 
-    runs-on: ubuntu-latest
-    steps:
-    - name: checkout
-      uses: actions/checkout@v1
-    - name: version
-      run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
-      id: version
-    - name: build package
-      working-directory: ./helm
-      run: helm package --version ${{ steps.version.outputs.version }} .
+#  buildHelmChart:
+#    needs: buildDocker 
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: checkout
+#      uses: actions/checkout@v1
+#    - name: version
+#      run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
+#      id: version
+#    - name: build package
+#      working-directory: ./helm
+#      run: helm package --version ${{ steps.version.outputs.version }} .
 #      run: helm package --version 0.1.0 .
-    - name: create release
-      uses: actions/create-release@v1
-      id: create_release
-      with:
-        draft: false
-        prerelease: false
-        release_name: ${{ steps.version.outputs.version }}
-        tag_name: ${{ github.ref }}
-        body_path: CHANGELOG.md
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-    - name: upload helm artifact
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./helm/shutdown-operator-${{ steps.version.outputs.version }}.tgz
-        asset_name: shutdown-operator-${{ steps.version.outputs.version }}.tgz
-#        asset_path: ./helm/shutdown-operator-0.1.0.tgz
-#       asset_name: shutdown-operator-0.1.0.tgz
-        asset_content_type: application/gzip
+#    - name: create release
+#      uses: actions/create-release@v1
+#      id: create_release
+#      with:
+#        draft: false
+#        prerelease: false
+#        release_name: ${{ steps.version.outputs.version }}
+#        tag_name: ${{ github.ref }}
+#        body_path: CHANGELOG.md
+#      env:
+#        GITHUB_TOKEN: ${{ github.token }}
+#    - name: upload helm artifact
+#      uses: actions/upload-release-asset@v1
+#      env:
+#        GITHUB_TOKEN: ${{ github.token }}
+#      with:
+#        upload_url: ${{ steps.create_release.outputs.upload_url }}
+#        asset_path: ./helm/shutdown-operator-${{ steps.version.outputs.version }}.tgz
+#        asset_name: shutdown-operator-${{ steps.version.outputs.version }}.tgz
+#        asset_content_type: application/gzip
 

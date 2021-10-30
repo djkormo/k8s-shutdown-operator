@@ -127,3 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# compressed
+
+*.tgz
+*.tar
+*.tar.gz
+*.zip
+*.7z
