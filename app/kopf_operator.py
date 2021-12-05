@@ -372,3 +372,4 @@ def delete_shutdown_operator(spec, name, status, namespace, logger, **kwargs):
 
 # Operator logic end      
 
+
