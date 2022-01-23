@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  namespace: {{ .Values.namespace | default "default" }}
+  namespace: {{ .Release.Namespace | default "default" }}
   name: {{ include "shutdown-operator.serviceAccountName" . }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
