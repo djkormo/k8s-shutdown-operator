@@ -18,9 +18,6 @@ spec:
         app: shutdown-operator
     spec:
       serviceAccountName: shutdown-operator
-      securityContext:
-        runAsUser:
-          1000
       containers:
       - env:
         - name: VERBOSE
@@ -48,11 +45,11 @@ spec:
           httpGet:
             path: /healthz
             port: 8080
-        securityContext:
-          readOnlyRootFilesystem: true
-          allowPrivilegeEscalation: false
-          privileged: false
-          runAsNonRoot: true
-          capabilities:
-            drop:
-              - ALL
+      securityContext:
+        readOnlyRootFilesystem: true
+        allowPrivilegeEscalation: false
+        privileged: false
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
