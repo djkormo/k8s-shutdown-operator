@@ -28,25 +28,15 @@ serviceAccount:
 
 podAnnotations: { }
 
-podSecurityContext: 
+securityContext: 
   readOnlyRootFilesystem: true
   allowPrivilegeEscalation: false
   privileged: false
   runAsNonRoot: true
+  runAsUser: 1000
   capabilities:
     drop:
       - ALL
-
-# fsGroup: 2000
-
-securityContext:
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  runAsNonRoot: true
-  runAsUser: 1000
-
 
 resources: #{ }
   # We usually recommend not to specify default resources and to leave this as a conscious

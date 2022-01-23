@@ -26,14 +26,12 @@ spec:
       {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "shutdown-operator.serviceAccountName" . }}
-      securityContext:
-      {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          securityContext:
-          {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext: 
+            {{- toYaml .Values.securityContext | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /healthz
@@ -48,7 +46,8 @@ spec:
       affinity:
       {{- toYaml . | nindent 8 }}
       {{- end }}
+
       {{- with .Values.tolerations }}
       tolerations:
-  {{- toYaml . | nindent 8 }}
-  {{- end }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
