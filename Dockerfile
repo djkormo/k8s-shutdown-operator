@@ -1,9 +1,8 @@
-FROM python:3.7-alpine
+FROM python:3.7.12-alpine
 
 RUN apk --no-cache add  gcc musl-dev curl bash
 
 RUN pip install --upgrade pip
-
 
 ADD app /app
 RUN addgroup -S worker && adduser -D -h /home/worker -s /bin/bash worker -G worker
