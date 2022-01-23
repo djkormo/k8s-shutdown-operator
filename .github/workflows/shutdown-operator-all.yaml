@@ -5,6 +5,7 @@ on:
     paths:
       - '**.yaml'
       - '**.py'
+      - "Dockerfile"
 
 
 jobs:
