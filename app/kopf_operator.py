@@ -11,7 +11,6 @@ import random
 import json
 import asyncio
 
-
 # check if namespace should be under operator controll
 
 def check_namespace(name,excluded_namespaces):
