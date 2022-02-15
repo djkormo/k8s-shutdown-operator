@@ -26,7 +26,10 @@
 
 name: pytester-cov workflow
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - '**.py'
 
 jobs:
   build:
@@ -46,8 +49,7 @@ jobs:
        mypy-options: "--ignore-missing-imports --show-error-codes"
        pylint-options: "--rcfile=setup.cfg"
        isort-options: "-w 100"
-       django: false
-    
+       strict: "high"
     
     - uses: actions/checkout@v2
     - name: Set up Python 3.7
