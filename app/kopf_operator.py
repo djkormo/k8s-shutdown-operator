@@ -276,7 +276,14 @@ try:
   EXCLUDED_NAMESPACES = os.environ['EXCLUDED_NAMESPACES']
 except:
   EXCLUDED_NAMESPACES="kube-system,kube-public,kube-node-lease"
-  print(f"Variable EXCLUDED_NAMESPACES is not set, using {EXCLUDED_NAMESPACES}s as default")    
+  print(f"Variable EXCLUDED_NAMESPACES is not set, using {EXCLUDED_NAMESPACES} as default")    
+
+
+try:
+  NAMESPACE = os.environ['NAMESPACE']
+except:
+  NAMESPACE="default"
+  print(f"Variable NAMESPACE is not set, using {NAMESPACE} as default")    
 
 
 # Operator configuration end   
