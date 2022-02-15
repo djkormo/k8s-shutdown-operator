@@ -4,7 +4,7 @@ metadata:
   name: shutdown-my-namespace
   namespace: my-namespace 
 spec:
-  namespace: my-namespace
+  namespace: project-operator
   dry-run: false # dry run mode , default false
   state: true # turning off mode, default true
   deployments: true # turn off deployments, default false
