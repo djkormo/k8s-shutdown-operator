@@ -17,18 +17,7 @@ jobs:
         uses: instrumenta/kubeval-action@master
         with:
           files: ./deploy
-          fetch-depth: "0" 
-      - env:
-          DEFAULT_BUMP: patch
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
-        id: version
-        name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.26.0
-        with:
-          find: development
-          include: __version__.py
-          replace: ${{ steps.version.outputs.new_tag }}
+
           
   validateHelmCharts:
     needs: validateKubernetesManifests
@@ -69,7 +58,24 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         dockerfile: Dockerfile
         workdir: .
-        
+    - env:
+        DEFAULT_BUMP: patch
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true
+      id: version
+      name: Bump version and push tag
+      uses: anothrNick/github-tag-action@1.26.0
+      with:
+          find: development
+          include: __version__.py
+          replace: ${{ steps.version.outputs.new_tag }}
+      
+    - name: Bump version in __version__.py
+      uses: jacobtomlinson/gha-find-replace@master
+      with:
+        find: development
+        include: __version__.py
+        replace: ${{ steps.version.outputs.new_tag }}      
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
