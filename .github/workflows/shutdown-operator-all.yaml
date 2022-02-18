@@ -24,7 +24,11 @@ jobs:
           WITH_V: true
         id: version
         name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.26.0          
+        uses: anothrNick/github-tag-action@1.26.0
+        with:
+          find: development
+          include: __version__.py
+          replace: ${{ steps.version.outputs.new_tag }}
           
   validateHelmCharts:
     needs: validateKubernetesManifests
