@@ -10,14 +10,11 @@ import datetime
 import random
 import json
 import asyncio
-
-
+# for operator version
+from __version__ import __version__
 
        
-
 # check if namespace should be under operator control
-
-
 
 def check_namespace(name,excluded_namespaces):
   env = Env()
@@ -247,10 +244,17 @@ def turn_on_statefulset(name,namespace,logger,kopf,metadata,spec,api,dry_run):
 
 
 @kopf.on.startup()
-async def startup_fn_simple(logger, **kwargs):
+async def startup_fn_simple(logger:kopf.Logger, settings: kopf.OperatorSettings, memo: kopf.Memo, **kwargs):
+    settings.persistence.finalizer = 'shutdown-operator/kopf-finalizer'
+    settings.persistence.progress_storage = kopf.AnnotationsProgressStorage(prefix='shutdown-operator')
+    settings.persistence.diffbase_storage = kopf.AnnotationsDiffBaseStorage(
+        prefix='shutdown-operator',
+        key='last-handled-configuration',
+    )
+
     logger.info('Environment variables:')
     for k, v in os.environ.items():
-        logger.info(f'{k}={v}')
+      logger.info(f'{k}={v}')
     logger.info('Starting in 5s...')
     await asyncio.sleep(5)
     
@@ -263,27 +267,30 @@ def get_current_timestamp(**kwargs):
 @kopf.on.probe(id='random')
 def get_random_value(**kwargs):
     return random.randint(0, 1_000_000)
-  
-  
+# return version of operator  
+@kopf.on.probe(id="version")
+def version_probe(**kwargs):
+    return __version__
+    
 # use env variable to control loop interval in seconds
 try:
   LOOP_INTERVAL = int(os.environ['LOOP_INTERVAL'])
 except:
   LOOP_INTERVAL=30
-  print(f"Variable LOOP_INTERVAL is not set, using {LOOP_INTERVAL}s as default")       
+  kopf.Logger.info(f"Variable LOOP_INTERVAL is not set, using {LOOP_INTERVAL}s as default")       
 
 try:
   EXCLUDED_NAMESPACES = os.environ['EXCLUDED_NAMESPACES']
 except:
   EXCLUDED_NAMESPACES="kube-system,kube-public,kube-node-lease"
-  print(f"Variable EXCLUDED_NAMESPACES is not set, using {EXCLUDED_NAMESPACES} as default")    
+  kopf.Logger.info(f"Variable EXCLUDED_NAMESPACES is not set, using {EXCLUDED_NAMESPACES} as default")    
 
 
 try:
   NAMESPACE = os.environ['NAMESPACE']
 except:
   NAMESPACE="default"
-  print(f"Variable NAMESPACE is not set, using {NAMESPACE} as default")    
+  kopf.Logger.info(f"Variable NAMESPACE is not set, using {NAMESPACE} as default")    
 
 
 # Operator configuration end   
