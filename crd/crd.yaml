@@ -43,20 +43,20 @@ spec:
                 type: boolean
                 nullable: false
                 default: false
-              filter:
+              label-selector:
                 type: string
                 nullable: false
                 default: "" 
               node-selector:
                 type: string
                 nullable: false
-                default: "shutdown-non-existing"     
+                default: "shutdown-non-existing"  
     served: true
     storage: true
     additionalPrinterColumns:
     - name: namespace
       type: string
-      description: Namespace to controll
+      description: Namespace to control
       jsonPath: .spec.namespace
     - name: dry-run
       type: boolean
@@ -74,7 +74,11 @@ spec:
       type: boolean
       description: State on - turning off, state off - turning on
       jsonPath: .spec.statefulsets
-    - name: filter
+    - name: label-selector
       type: string
-      description: Filtering resources to controll
-      jsonPath: .spec.filter
+      description: Filtering resources to control
+      jsonPath: .spec.label-selector
+    - name: node-selector
+      type: string
+      description: Node selector for daemonset scaling
+      jsonPath: .spec.node-selector

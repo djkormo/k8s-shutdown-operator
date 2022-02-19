@@ -84,7 +84,7 @@ apiVersion: djkormo.github/v1alpha1
 kind: Shutdown
 metadata:
   name: shutdown-my-namespace
-  namespace: my-namespace 
+  namespace: project-operator
 spec:
   namespace: my-namespace
   dry-run: false # dry run mode , default false
@@ -92,8 +92,9 @@ spec:
   deployments: true # turn off deployments, default false
   daemonsets: true # turn off daemonsets , default false
   statefulsets: true # turn off daemonsets statefulset default false 
-  filter: ""
-  node-selector: "shutdown-non-existing-test-abcef"  
+  label-selector: "shutdown-app=deployment" # for filtering objects
+  node-selector: "shutdown-non-existing-test"  # for daemonset control
+
 ```
 
 
@@ -124,6 +125,9 @@ https://github.com/kubernetes-client/python/issues/1378
 https://stackoverflow.com/questions/53929693/how-to-scale-kubernetes-daemonset-to-0
 
 https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions
+
+https://stackoverflow.com/questions/52387656/how-can-i-get-pods-by-label-using-the-python-kubernetes-api
+
 
 
 

@@ -18,6 +18,8 @@ spec:
         app: shutdown-operator
     spec:
       serviceAccountName: shutdown-operator
+      securityContext:
+        runAsUser: 1000
       containers:
       - env:
         - name: VERBOSE

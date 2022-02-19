@@ -3,6 +3,8 @@ kind: StatefulSet
 metadata:
   name: sts-test
   namespace: my-namespace
+  labels:
+    shutdown-app: statefulset
 spec:
   serviceName: "nginx"
   replicas: 3
@@ -17,6 +19,13 @@ spec:
       containers:
       - name: nginx
         image: k8s.gcr.io/nginx-slim:0.8
+        resources:
+          limits:
+            cpu: 50m
+            memory: 200Mi
+          requests:
+            cpu: 50m
+            memory: 200Mi
         ports:
         - containerPort: 80
           name: web

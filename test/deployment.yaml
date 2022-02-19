@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: deploy-test
   namespace: my-namespace
+  labels:
+    shutdown-app: deployment
 spec:
   selector:
     matchLabels:

@@ -14,6 +14,30 @@ import asyncio
 from __version__ import __version__
 
        
+REPLICAS_ANNOTATON="shutdown.djkormo.github/replicas"       
+TIMESTAMP_ANNOTATION="shutdown.djkormo.github/changedAt"
+
+# use env variable to control loop interval in seconds
+try:
+  LOOP_INTERVAL = int(os.environ['LOOP_INTERVAL'])
+except:
+  LOOP_INTERVAL=30
+  kopf.Logger.info(f"Variable LOOP_INTERVAL is not set, using {LOOP_INTERVAL}s as default")       
+
+try:
+  EXCLUDED_NAMESPACES = os.environ['EXCLUDED_NAMESPACES']
+except:
+  EXCLUDED_NAMESPACES="kube-system,kube-public,kube-node-lease"
+  kopf.Logger.info(f"Variable EXCLUDED_NAMESPACES is not set, using {EXCLUDED_NAMESPACES} as default")    
+
+
+try:
+  NAMESPACE = os.environ['NAMESPACE']
+except:
+  NAMESPACE="default"
+  kopf.Logger.info(f"Variable NAMESPACE is not set, using {NAMESPACE} as default")    
+
+
 # check if namespace should be under operator control
 
 def check_namespace(name,excluded_namespaces):
@@ -21,8 +45,8 @@ def check_namespace(name,excluded_namespaces):
   env.read_env()  # read .env file, if it exists
   namespace_list = env.list(excluded_namespaces)
   if name in namespace_list:
-    print(f"Excluded namespace list: {namespace_list} ")    
-    print(f"Excluded namespace found: {name}")
+    kopf.Logger.info(f"Excluded namespace list: {namespace_list} ")    
+    kopf.Logger.info(f"Excluded namespace found: {name}")
     return True
   else:
      return False  
@@ -48,8 +72,8 @@ def turn_off_deployment(name,namespace,logger,kopf,metadata,spec,api,dry_run):
   body = {
                 "metadata": {
                     "annotations": {
-                        "shutdown.djkormo.github/replicas": replicas,
-                        "shutdown.djkormo.github/changedAt": now
+                        REPLICAS_ANNOTATON: replicas,
+                        TIMESTAMP_ANNOTATION: now
                     }
                 }
     }
@@ -83,7 +107,7 @@ def turn_off_deployment(name,namespace,logger,kopf,metadata,spec,api,dry_run):
 def turn_on_deployment(name,namespace,logger,kopf,metadata,spec,api,dry_run):
     logger.info("Turning on Deployment %s in namespace %s", name,namespace)
   
-    replicas=metadata.annotations['shutdown.djkormo.github/replicas']
+    replicas=metadata.annotations[REPLICAS_ANNOTATON]
     replicas=int(replicas)
     if (not dry_run):
       logger.info("Setting Deployment %s in %s namespace to %s replicas",name,namespace,replicas)
@@ -101,7 +125,6 @@ def turn_on_deployment(name,namespace,logger,kopf,metadata,spec,api,dry_run):
 # Deployment end
 
 
-
 # Daemonset start   
 
 # Turning off daemonset
@@ -115,8 +138,8 @@ def turn_off_daemonset(name,namespace,logger,kopf,metadata,spec,status,api,dry_r
   body = {
             'metadata': {
               'annotations': {
-                  'shutdown.djkormo.github/replicas': replicas,
-                  'shutdown.djkormo.github/changedAt': now
+                  REPLICAS_ANNOTATON: replicas,
+                  TIMESTAMP_ANNOTATION: now
                   }
                 }
     }
@@ -158,7 +181,6 @@ def turn_on_daemonset(name,namespace,logger,kopf,metadata,spec,status,api,dry_ru
       try:
 
         api_response =api.patch_namespaced_daemon_set(name, namespace, body=body)
-        #pprint(api_response)
       except ApiException as e:
         if e.status == 404:
           logger.error("No daemonset found")
@@ -186,8 +208,8 @@ def turn_off_statefulset(name,namespace,logger,kopf,metadata,spec,api,dry_run):
   body = {
                 'metadata': {
                     'annotations': {
-                        'shutdown.djkormo.github/replicas': replicas,
-                        'shutdown.djkormo.github/changedAt': now
+                        REPLICAS_ANNOTATON: replicas,
+                        TIMESTAMP_ANNOTATION: now
                     }
                 }
     }
@@ -195,7 +217,7 @@ def turn_off_statefulset(name,namespace,logger,kopf,metadata,spec,api,dry_run):
   if (not dry_run):
     try:
       api_response =api.patch_namespaced_stateful_set(name, namespace, body=body)
-      #pprint(api_response)
+
     except ApiException as e:
       if e.status == 404:
         logger.error("No statefulset found")
@@ -209,7 +231,7 @@ def turn_off_statefulset(name,namespace,logger,kopf,metadata,spec,api,dry_run):
     body = {"spec": {"replicas": 0}}
     try:
       api_response =api.patch_namespaced_stateful_set_scale(name, namespace, body=body)
-      #pprint(api_response)
+
     except ApiException as e:
       if e.status == 404:
         logger.error("No statefulset found")
@@ -223,13 +245,13 @@ def turn_on_statefulset(name,namespace,logger,kopf,metadata,spec,api,dry_run):
     logger.info("Turning on Statefulset %s in namespace %s", name,namespace)   
     if (not dry_run):
       # set replicas to previous number 
-      replicas=metadata.annotations['shutdown.djkormo.github/replicas']
+      replicas=metadata.annotations[REPLICAS_ANNOTATON]
       replicas=int(replicas)
       logger.info("Setting Statefulset %s in %s namespace to %s replicas",name,namespace,replicas)
       body = {"spec": {"replicas": replicas}} 
       try:
         api_response=api.patch_namespaced_stateful_set_scale(name, namespace, body=body)
-        #pprint(api_response)
+
       except ApiException as e:
         if e.status == 404:
           logger.error("No statefulset found")
@@ -272,25 +294,6 @@ def get_random_value(**kwargs):
 def version_probe(**kwargs):
     return __version__
     
-# use env variable to control loop interval in seconds
-try:
-  LOOP_INTERVAL = int(os.environ['LOOP_INTERVAL'])
-except:
-  LOOP_INTERVAL=30
-  kopf.Logger.info(f"Variable LOOP_INTERVAL is not set, using {LOOP_INTERVAL}s as default")       
-
-try:
-  EXCLUDED_NAMESPACES = os.environ['EXCLUDED_NAMESPACES']
-except:
-  EXCLUDED_NAMESPACES="kube-system,kube-public,kube-node-lease"
-  kopf.Logger.info(f"Variable EXCLUDED_NAMESPACES is not set, using {EXCLUDED_NAMESPACES} as default")    
-
-
-try:
-  NAMESPACE = os.environ['NAMESPACE']
-except:
-  NAMESPACE="default"
-  kopf.Logger.info(f"Variable NAMESPACE is not set, using {NAMESPACE} as default")    
 
 
 # Operator configuration end   
@@ -316,7 +319,10 @@ def check_shutdown_on_time_operator(spec, name, namespace, logger, **kwargs):
   statefulsets_enabled = spec.get('statefulsets',False)
   state = spec.get('state',True)
   node_selector = spec.get('node-selector','shutdown-non-existing')
-
+  label_selector=spec.get('label-selector','')
+  
+  logger.info("Label selector : %s",label_selector)
+  
   # check for excluded namespace
   if check_namespace(name=name,excluded_namespaces='EXCLUDED_NAMESPACES'):
     return {'shutdown-operator-name': namespace}   
@@ -328,7 +334,11 @@ def check_shutdown_on_time_operator(spec, name, namespace, logger, **kwargs):
   # Turning off state and deployments are under control
   if deployments_enabled and state:
     try:
-      api_response = api.list_namespaced_deployment(namespace=object_namespace)
+      if label_selector=='':
+        api_response = api.list_namespaced_deployment(namespace=object_namespace)
+      else:
+        api_response = api.list_namespaced_deployment(namespace=object_namespace,label_selector=label_selector)
+      logger.info ("Found %d deploy to turn off",len(api_response.items))      
       for d in api_response.items:
         logger.info("Deployment %s has %s available replicas of %s desired replicas", d.metadata.name,d.status.available_replicas,d.spec.replicas)
         if d.spec.replicas>0 :
@@ -339,7 +349,11 @@ def check_shutdown_on_time_operator(spec, name, namespace, logger, **kwargs):
   # Turning on state and deployments are under control
   if deployments_enabled and not state:
     try:
-      api_response = api.list_namespaced_deployment(namespace=object_namespace)
+      if label_selector=='':
+        api_response = api.list_namespaced_deployment(namespace=object_namespace)
+      else: 
+        api_response = api.list_namespaced_deployment(namespace=object_namespace,label_selector=label_selector)
+      logger.info ("Found %d deploy to turn on",len(api_response.items))  
       for d in api_response.items:
         logger.debug("Deployment %s has %s available replicas of %s desired replicas", d.metadata.name,d.status.available_replicas,d.spec.replicas)
         if d.spec.replicas==0 :
@@ -352,7 +366,11 @@ def check_shutdown_on_time_operator(spec, name, namespace, logger, **kwargs):
   if daemonsets_enabled and state:
     api = kubernetes.client.AppsV1Api()
     try:
-      api_response = api.list_namespaced_daemon_set(namespace=object_namespace)
+      if label_selector=='':
+        api_response = api.list_namespaced_daemon_set(namespace=object_namespace)
+      else:
+        api_response = api.list_namespaced_daemon_set(namespace=object_namespace,label_selector=label_selector)
+      logger.info ("Found %d daemonset to turn off",len(api_response.items))  
       for d in api_response.items:
         logger.debug("Daemonset %s has %s desired replicas", d.metadata.name,d.status.desired_number_scheduled)
         if d.status.desired_number_scheduled>0 :
@@ -364,7 +382,11 @@ def check_shutdown_on_time_operator(spec, name, namespace, logger, **kwargs):
   if daemonsets_enabled and not state:
     api = kubernetes.client.AppsV1Api()
     try:
-      api_response = api.list_namespaced_daemon_set(namespace=object_namespace)
+      if label_selector=='':
+        api_response = api.list_namespaced_daemon_set(namespace=object_namespace)
+      else:
+        api_response = api.list_namespaced_daemon_set(namespace=object_namespace,label_selector=label_selector)
+      logger.info ("Found %d daemonset to turn on",len(api_response.items))
       for d in api_response.items:
         logger.debug("Daemonset %s has %s desired replicas", d.metadata.name,d.status.desired_number_scheduled)
         if d.status.desired_number_scheduled==0 :
@@ -377,7 +399,11 @@ def check_shutdown_on_time_operator(spec, name, namespace, logger, **kwargs):
   if statefulsets_enabled and state:
     api = kubernetes.client.AppsV1Api()
     try:
-      api_response = api.list_namespaced_stateful_set(namespace=object_namespace)
+      if label_selector=='':
+        api_response = api.list_namespaced_stateful_set(namespace=object_namespace)
+      else:
+        api_response = api.list_namespaced_stateful_set(namespace=object_namespace,label_selector=label_selector)
+        logger.info ("Found %d statefulset to turn off",len(api_response.items))
       for d in api_response.items:
         logger.debug("Statefulset %s has %s replicas", d.metadata.name,d.spec.replicas)
         if d.spec.replicas>0 :
@@ -389,7 +415,11 @@ def check_shutdown_on_time_operator(spec, name, namespace, logger, **kwargs):
   if statefulsets_enabled and not state:
     api = kubernetes.client.AppsV1Api()
     try:
-      api_response = api.list_namespaced_stateful_set(namespace=object_namespace)
+      if label_selector=='':
+        api_response = api.list_namespaced_stateful_set(namespace=object_namespace)
+      else:
+        api_response = api.list_namespaced_stateful_set(namespace=object_namespace,label_selector=label_selector) 
+        logger.info ("Found %d statefulset to turn on",len(api_response.items))
       for d in api_response.items:
         logger.debug("Statefulset %s has %s replicas", d.metadata.name,d.spec.replicas)
         if d.spec.replicas==0 :

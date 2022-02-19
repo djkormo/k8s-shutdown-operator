@@ -5,6 +5,7 @@ metadata:
   namespace: my-namespace
   labels:
     k8s-app: fluentd-logging
+    shutdown-app: daemonset
 spec:
   selector:
     matchLabels:
