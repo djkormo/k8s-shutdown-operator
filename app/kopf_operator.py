@@ -43,13 +43,16 @@ except:
 def check_namespace(name,excluded_namespaces):
   env = Env()
   env.read_env()  # read .env file, if it exists
-  namespace_list = env.list(excluded_namespaces)
-  if name in namespace_list:
-    print(f"Excluded namespace list: {namespace_list} ")    
-    print(f"Excluded namespace found: {name}")
-    return True
-  else:
-     return False  
+  try:
+    namespace_list = env.list(excluded_namespaces)
+    if name in namespace_list:
+      print(f"Excluded namespace list: {namespace_list} ")    
+      print(f"Excluded namespace found: {name}")
+      return True
+    else:
+       return False
+  except:
+      return False     
 
 # Deployment start     
 
@@ -322,6 +325,7 @@ def check_shutdown_on_time_operator(spec, name, namespace, logger, **kwargs):
   label_selector=spec.get('label-selector','')
   
   logger.info("Label selector : %s",label_selector)
+  
   
   # check for excluded namespace
   if check_namespace(name=name,excluded_namespaces='EXCLUDED_NAMESPACES'):

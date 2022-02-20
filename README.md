@@ -145,6 +145,13 @@ helm search repo shutdown-operator
 helm install shutdown-operator djkormo/shutdown-operator \
   --namespace shutdown-operator --values charts/shutdown-operator/values.yaml --create-namespace
 
+helm upgrade shutdown-operator djkormo/shutdown-operator \
+  --namespace shutdown-operator --values charts/shutdown-operator/values.yaml
+
+
+helm uninstall shutdown-operator  --namespace shutdown-operator 
+
+
 ```
 
 Based on 
