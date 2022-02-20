@@ -2,7 +2,6 @@ apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
  name: hpa-test
- namespace: my-namespace
 spec:
  maxReplicas: 3
  minReplicas: 1
@@ -10,4 +9,4 @@ spec:
  scaleTargetRef:
    apiVersion: apps/v1
    kind: Deployment
-   name: nginx-deployment
+   name: deploy-test

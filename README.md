@@ -105,7 +105,7 @@ apiVersion: djkormo.github/v1alpha1
 kind: Shutdown
 metadata:
   name: shutdown-my-namespace
-  namespace: project-operator
+  namespace: shutdown-operator
 spec:
   namespace: my-namespace
   dry-run: false # dry run mode , default false
@@ -128,7 +128,7 @@ kubectl auth can-i -n shutdown-operator create events --as=system:serviceaccount
 Add release version as git tag
 
 ```
-git tag v0.1.0
+git tag 0.3.0
 git push origin --tags
 
 ```
@@ -142,7 +142,9 @@ helm repo update
 
 helm search repo shutdown-operator
 
-helm install shutdown-operator djkormo/shutdown-operator -n shutdown-operator
+helm install shutdown-operator djkormo/shutdown-operator \
+  --namespace shutdown-operator --values charts/shutdown-operator/values.yaml --create-namespace
+
 ```
 
 Based on 

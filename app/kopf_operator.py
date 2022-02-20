@@ -22,20 +22,20 @@ try:
   LOOP_INTERVAL = int(os.environ['LOOP_INTERVAL'])
 except:
   LOOP_INTERVAL=30
-  kopf.Logger.info(f"Variable LOOP_INTERVAL is not set, using {LOOP_INTERVAL}s as default")       
+  print(f"Variable LOOP_INTERVAL is not set, using {LOOP_INTERVAL}s as default")       
 
 try:
   EXCLUDED_NAMESPACES = os.environ['EXCLUDED_NAMESPACES']
 except:
   EXCLUDED_NAMESPACES="kube-system,kube-public,kube-node-lease"
-  kopf.Logger.info(f"Variable EXCLUDED_NAMESPACES is not set, using {EXCLUDED_NAMESPACES} as default")    
+  print(f"Variable EXCLUDED_NAMESPACES is not set, using {EXCLUDED_NAMESPACES} as default")    
 
 
 try:
   NAMESPACE = os.environ['NAMESPACE']
 except:
   NAMESPACE="default"
-  kopf.Logger.info(f"Variable NAMESPACE is not set, using {NAMESPACE} as default")    
+  print(f"Variable NAMESPACE is not set, using {NAMESPACE} as default")    
 
 
 # check if namespace should be under operator control
@@ -45,8 +45,8 @@ def check_namespace(name,excluded_namespaces):
   env.read_env()  # read .env file, if it exists
   namespace_list = env.list(excluded_namespaces)
   if name in namespace_list:
-    kopf.Logger.info(f"Excluded namespace list: {namespace_list} ")    
-    kopf.Logger.info(f"Excluded namespace found: {name}")
+    print(f"Excluded namespace list: {namespace_list} ")    
+    print(f"Excluded namespace found: {name}")
     return True
   else:
      return False  

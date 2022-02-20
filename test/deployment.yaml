@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deploy-test
-  namespace: my-namespace
   labels:
     shutdown-app: deployment
 spec:
