@@ -4,14 +4,13 @@
 
 replicaCount: 1
 
-namespace: "shutdown-operator"
 installCRDs: true
 
 image:
   repository: djkormo/shutdown-operator
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: "0.3.0"
 
 imagePullSecrets: [ ]
 nameOverride: ""

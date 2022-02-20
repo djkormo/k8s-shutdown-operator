@@ -145,7 +145,6 @@ helm search repo shutdown-operator
 helm install shutdown-operator djkormo/shutdown-operator -n shutdown-operator
 ```
 
-
 Based on 
 
 https://kopf.readthedocs.io/en/latest/walkthrough/creation/
