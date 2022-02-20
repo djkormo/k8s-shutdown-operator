@@ -3,7 +3,10 @@ name: shutdown operator pipeline
 on:
   push:
     paths:
-      - '**.yaml'
+      - 'charts/*.yaml'
+      - 'deploy/*.yaml'
+      - 'crd/*.yaml'
+      - '**.bash'
       - '**.py'
       - 'Dockerfile'
 
