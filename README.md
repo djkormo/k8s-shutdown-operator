@@ -1,5 +1,5 @@
 
-```mermaid
+<div class="mermaid">
 sequenceDiagram
     participant Kubernetes
     participant shutdown
@@ -16,7 +16,7 @@ sequenceDiagram
     deployment->>deployment: save number of replicas in annotation
     statefulset->>statefulset: save number of replicas in annotation
     operator->>operator: check on next event
-```
+</div>
 
 ## Steps for running operator in our k8s cluster
 
