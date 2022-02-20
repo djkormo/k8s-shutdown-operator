@@ -1,6 +1,5 @@
 # Kubernetes shutdown operator 
 
-
 ```mermaid!
 sequenceDiagram
     participant Kubernetes
@@ -19,7 +18,6 @@ sequenceDiagram
     statefulset->>statefulset: save number of replicas in annotation
     operator->>operator: check on next event
 ```
-
 ## Steps for running operator in our k8s cluster
 
 ### Build and push image 
@@ -143,19 +141,27 @@ helm search repo shutdown-operator
 helm install shutdown-operator djkormo/shutdown-operator -n shutdown-operator
 ```
 
-Based on 
+### Based on 
+
 
 https://kopf.readthedocs.io/en/latest/walkthrough/creation/
 
+
 https://github.com/kubernetes-client/python/blob/master/examples/deployment_crud.py
+
 
 https://github.com/kubernetes-client/python/issues/1378
 
+
 https://stackoverflow.com/questions/53929693/how-to-scale-kubernetes-daemonset-to-0
+
 
 https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions
 
-https://stackoverflow.com/questions/52387656/how-can-i-get-pods-by-label-using-the-python-kubernetes-api
+
+https://stackoverflow.com/questions/52387656/
+
+how-can-i-get-pods-by-label-using-the-python-kubernetes-api
 
 
 
