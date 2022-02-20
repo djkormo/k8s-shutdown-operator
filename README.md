@@ -1,6 +1,6 @@
 # Kubernetes shutdown operator 
 
-```mermaid!
+```mermaid
 sequenceDiagram
     participant Kubernetes
     participant shutdown
