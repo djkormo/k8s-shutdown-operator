@@ -18,6 +18,26 @@ sequenceDiagram
     operator->>operator: check on next event
 </div>
 
+
+```mermaid
+sequenceDiagram
+    participant Kubernetes
+    participant shutdown
+    participant operator
+    participant deployment
+    participant statefulset
+    participant daemonset
+    Kubernetes->>shutdown: deploy to k8s cluster
+    operator->>shutdown: check configuration
+    operator->>daemonset: turn on or off  daemonset
+    operator->>deployment: turn on or off  deployment
+    operator->>statefulset: turn on or off  statefulset
+    daemonset->>daemonset: save number of replicas in annotation
+    deployment->>deployment: save number of replicas in annotation
+    statefulset->>statefulset: save number of replicas in annotation
+    operator->>operator: check on next event
+```
+
 ## Steps for running operator in our k8s cluster
 
 ### Build and push image 
