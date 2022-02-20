@@ -29,7 +29,7 @@ name: pytester-cov workflow
 on:
   push:
     paths:
-      - '**.py'
+      - 'app/*.py'
 
 jobs:
   build:
