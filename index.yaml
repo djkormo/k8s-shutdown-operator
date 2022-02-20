@@ -1,0 +1,15 @@
+apiVersion: v1
+entries:
+  shutdown-operator:
+  - apiVersion: v2
+    appVersion: 0.2.0
+    created: "2022-02-20T12:59:56.670883229Z"
+    description: Helm Chart for deploying the Shutdown Operator
+    digest: 1f77f430a035096b25f5dabc7b2d96e30612a1cd5e3adef1b9ba05351c7e61b3
+    icon: https://helm.elastic.co/icons/logstash.png
+    name: shutdown-operator
+    type: application
+    urls:
+    - https://github.com/djkormo/k8s-shutdown-operator/releases/download/shutdown-operator-0.2.0/shutdown-operator-0.2.0.tgz
+    version: 0.2.0
+generated: "2022-02-20T12:59:56.54208901Z"
