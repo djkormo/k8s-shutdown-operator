@@ -142,7 +142,7 @@ helm repo update
 
 helm search repo shutdown-operator
 
-helm install shutdown-operator djkormo/shutdown-operator -n shutdown-operator --dry-run 
+helm install shutdown-operator djkormo/shutdown-operator -n shutdown-operator
 ```
 
 
