@@ -139,6 +139,7 @@ helm repo update
 helm search repo shutdown-operator
 
 helm install shutdown-operator djkormo/shutdown-operator -n shutdown-operator
+
 ```
 
 ### Based on 
@@ -159,9 +160,7 @@ https://stackoverflow.com/questions/53929693/how-to-scale-kubernetes-daemonset-t
 https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions
 
 
-https://stackoverflow.com/questions/52387656/
-
-how-can-i-get-pods-by-label-using-the-python-kubernetes-api
+https://stackoverflow.com/questions/52387656/how-can-i-get-pods-by-label-using-the-python-kubernetes-api
 
 
 
